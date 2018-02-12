@@ -1,32 +1,34 @@
-FROM ubuntu
+FROM ubuntu:16.04
 MAINTAINER Christian Lück <christian@lueck.tv>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
-  nginx php5-fpm supervisor \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+  nginx php7.0-fpm supervisor \
   wget unzip patch
 
+RUN service php7.0-fpm start
+
 # install h5ai and patch configuration
-RUN wget http://release.larsjung.de/h5ai/h5ai-0.24.1.zip
-RUN unzip h5ai-0.24.1.zip -d /usr/share/h5ai
+RUN wget http:`(wget https://larsjung.de/h5ai/ -q -O -) | sed 's/.*href="\(.*\.zip\)".*/\1/p' | head -n1`
+RUN unzip h5ai-*.zip -d /usr/share/h5ai
 
 # patch h5ai because we want to deploy it ouside of the document root and use /var/www as root for browsing
-ADD App.php.patch App.php.patch
-RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/server/php/inc/ -i /App.php.patch && rm App.php.patch
+ADD h5ai-path.patch patch
+RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/php/core/ -i /patch && rm patch
 
-ADD options.json.patch options.json.patch
-RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/conf/ -i /options.json.patch && rm options.json.patch
+#ADD options.json.patch options.json.patch
+#RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/conf/ -i /options.json.patch && rm options.json.patch
 
 # add h5ai as the only nginx site
-ADD h5ai.nginx.conf /etc/nginx/sites-available/h5ai
-RUN ln -s /etc/nginx/sites-available/h5ai /etc/nginx/sites-enabled/h5ai
-RUN rm /etc/nginx/sites-enabled/default
+ADD h5ai.nginx.conf /etc/nginx/sites-available/default
 
-WORKDIR /var/www
+#WORKDIR /var/www
 
 # add dummy files in case the container is not run with a volume mounted to /var/www
-RUN echo "Looks like you did not mount a volume to `/var/www`. See README.md for details." > /var/www/INSTALL.md
-RUN mkdir -p /var/www/first/second/third/fourth/fifth
-ADD README.md /var/www/README.md
+#RUN echo "Looks like you did not mount a volume to `/var/www`. See README.md for details." > /var/www/INSTALL.md
+#RUN mkdir -p /var/www/first/second/third/fourth/fifth
+#ADD README.md /var/www/README.md
 
 # use supervisor to monitor all services
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
