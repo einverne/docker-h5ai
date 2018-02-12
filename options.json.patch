@@ -1,44 +1,42 @@
+diff --git a/options.json b/options.json
+index 8451a64..901565f 100644
 --- a/options.json
 +++ b/options.json
-@@ -44,12 +44,12 @@
- 	*/
- 	"view": {
- 		"modes": ["details", "grid", "icons"],
--		"sizes": [48, 24, 96],
-+		"sizes": [24, 48, 96],
- 		"setParentFolderLabels": true,
- 		"hideParentFolderLinks": false,
- 		"hideFolders": false,
- 		"binaryPrefix": false,
--		"indexFiles": ["index.html", "index.htm", "index.php"],
-+		"indexFiles": [],
- 		"ignore": ["^\\.", "^_h5ai"],
- 		"smartBrowsing": true,
- 		"extInNewWindow": false
-@@ -188,7 +188,7 @@
- 		2: mode, servername and -version
- 	*/
- 	"mode": {
--		"enabled": true,
-+		"enabled": false,
- 		"display": 2
- 	},
- 
-@@ -280,7 +280,7 @@
- 	- checkboxes: boolean, show a checkbox on mouse over item
- 	*/
- 	"select": {
--		"enabled": true,
-+		"enabled": false,
- 		"checkboxes": true
- 	},
- 
-@@ -344,7 +344,7 @@
- 	- maxSubfolders: max number of subfolders to show in tree
- 	*/
- 	"tree": {
--		"enabled": true,
-+		"enabled": false,
- 		"slide": true,
- 		"maxSubfolders": 50
- 	}
+@@ -123,7 +123,7 @@
+     - alwaysVisible: boolean, always show download button (defaults to download the current folder)
+     */
+     "download": {
+-        "enabled": false,
++        "enabled": true,
+         "type": "php-tar",
+         "packageName": null,
+         "alwaysVisible": false
+@@ -181,8 +181,8 @@
+     - qrColor: string, QR-Code fill color
+     */
+     "info": {
+-        "enabled": false,
+-        "show": false,
++        "enabled": true,
++        "show": true,
+         "qrcode": true,
+         "qrFill": "#999",
+         "qrBack": "#fff"
+@@ -305,7 +305,7 @@
+     - ignorecase: boolean, ignore case
+     */
+     "search": {
+-        "enabled": false,
++        "enabled": true,
+         "advanced": true,
+         "debounceTime": 300,
+         "ignorecase": true
+@@ -319,7 +319,7 @@
+     - checkboxes: boolean, show a checkbox on mouse over item
+     */
+     "select": {
+-        "enabled": false,
++        "enabled": true,
+         "clickndrag": true,
+         "checkboxes": true
+     },

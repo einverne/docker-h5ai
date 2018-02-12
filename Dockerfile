@@ -2,23 +2,25 @@ FROM ubuntu:16.04
 MAINTAINER Christian Lück <christian@lueck.tv>
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV H5AI_VERSION 0.29.0
 
 RUN apt-get update && apt-get install -y \
   nginx php7.0-fpm supervisor \
-  wget unzip patch
+  wget unzip patch ffmpeg imagemagick 
 
 RUN service php7.0-fpm start
 
 # install h5ai and patch configuration
-RUN wget http:`(wget https://larsjung.de/h5ai/ -q -O -) | sed 's/.*href="\(.*\.zip\)".*/\1/p' | head -n1`
-RUN unzip h5ai-*.zip -d /usr/share/h5ai
+# RUN wget http:`(wget https://larsjung.de/h5ai/ -q -O -) | sed 's/.*href="\(.*\.zip\)".*/\1/p' | head -n1`
+RUN wget http://release.larsjung.de/h5ai/h5ai-$H5AI_VERSION.zip
+RUN unzip h5ai-$H5AI_VERSION.zip -d /usr/share/h5ai
 
 # patch h5ai because we want to deploy it ouside of the document root and use /var/www as root for browsing
 ADD h5ai-path.patch patch
 RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/php/core/ -i /patch && rm patch
 
-#ADD options.json.patch options.json.patch
-#RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/conf/ -i /options.json.patch && rm options.json.patch
+ADD options.json.patch options.json.patch
+RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/conf/ -i /options.json.patch && rm options.json.patch
 
 # add h5ai as the only nginx site
 ADD h5ai.nginx.conf /etc/nginx/sites-available/default
