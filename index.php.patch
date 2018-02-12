@@ -1,0 +1,33 @@
+diff --git a/index.php b/index.php
+index 9638a5c..1ce25fe 100644
+--- a/index.php
++++ b/index.php
+@@ -1,5 +1,7 @@
+ <?php
+ 
++auth();
++
+ define('H5AI_VERSION', '0.29.0');
+ define('MIN_PHP_VERSION', '5.5.0');
+ 
+@@ -15,3 +17,20 @@ if (substr(H5AI_VERSION, 0, 1) === '{') {
+ 
+ require_once __DIR__ . '/../private/php/class-bootstrap.php';
+ Bootstrap::run();
++
++function auth ()
++{
++    $valid_passwords = array ("user" => "password");
++    $valid_users = array_keys($valid_passwords);
++
++    $user = $_SERVER['PHP_AUTH_USER'];
++    $pass = $_SERVER['PHP_AUTH_PW'];
++
++    $validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
++
++    if (!$validated) {
++      header('WWW-Authenticate: Basic realm="My Realm"');
++      header('HTTP/1.0 401 Unauthorized');
++      die ("Not authorized");
++    }
++}
