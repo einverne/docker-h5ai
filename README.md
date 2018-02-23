@@ -39,3 +39,5 @@ http://localhost:81
     git clone https://github.com/einverne/docker-h5ai.git
     cd docker-h5ai
     sudo docker build -t "docker-h5ai" .
+
+默认的密码为 user -> password， 如果需要修改，更改 `index.php.patch` 文件中第20行，修改为自己想要的用户名和密码。
