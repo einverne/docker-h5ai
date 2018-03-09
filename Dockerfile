@@ -23,8 +23,8 @@ ADD options.json.patch options.json.patch
 RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/private/conf/ -i /options.json.patch && rm options.json.patch
 
 # 是否添加密码
-ADD index.php.patch index.php.patch
-RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/public/ -i /index.php.patch && rm index.php.patch
+# ADD index.php.patch index.php.patch
+# RUN patch -p1 -u -d /usr/share/h5ai/_h5ai/public/ -i /index.php.patch && rm index.php.patch
 
 # add h5ai as the only nginx site
 ADD h5ai.nginx.conf /etc/nginx/sites-available/default
